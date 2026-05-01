@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ジャンル選択</title>
+  <style>
+    body { font-size: 1.5rem; padding: 20px; }
+    .genre { margin: 10px 0; }
+    button { 
+      font-size: 1.5rem; 
+      padding: 15px 30px; 
+      margin-top: 20px; 
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<h2>スライドショーで再生するジャンルを選択</h2>
+
+<div class="genre"><label><input type="checkbox" value="TP"> TP（英単語）</label></div>
+<div class="genre"><label><input type="checkbox" value="BP"> BP（基礎英語）</label></div>
+<div class="genre"><label><input type="checkbox" value="MH"> MH（みんはや）</label></div>
+<div class="genre"><label><input type="checkbox" value="ZZ"> ZZ（雑学）</label></div>
+
+<button onclick="startShow()">スライドショー開始</button>
+
+<script>
+  // ジャンルごとの問題数（Excelで自動生成してOK）
+  const files = {
+    TP: 5,
+    BP: 3,
+    MH: 4,
+    ZZ: 2
+  };
+
+  function startShow() {
+    const selected = [...document.querySelectorAll('input[type=checkbox]:checked')]
+                      .map(cb => cb.value);
+
+    if (selected.length === 0) {
+      alert("ジャンルを選んでください");
+      return;
+    }
+
+    let playlist = [];
+
+    selected.forEach(code => {
+      for (let i = 1; i <= files[code]; i++) {
+        const num = String(i).padStart(5, "0");
+        playlist.push(`slides/${code}/${num}.html`);
+      }
+    });
+
+    // playlist を保存
+    localStorage.setItem("playlist", JSON.stringify(playlist));
+
+    // 最初の問題へ
+    window.location.href = playlist[0];
+  }
+</script>
+
+</body>
+</html>
