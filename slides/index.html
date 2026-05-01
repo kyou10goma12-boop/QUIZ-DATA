@@ -6,12 +6,12 @@
   <title>ジャンル選択</title>
   <style>
     body { font-size: 1.5rem; padding: 20px; }
-    .genre { margin: 10px 0; }
-    button { 
-      font-size: 1.5rem; 
-      padding: 15px 30px; 
-      margin-top: 20px; 
+    .genre { margin: 12px 0; }
+    button {
+      font-size: 1.5rem;
+      padding: 15px;
       width: 100%;
+      margin-top: 25px;
     }
   </style>
 </head>
@@ -19,31 +19,53 @@
 
 <h2>スライドショーで再生するジャンルを選択</h2>
 
+<!-- ★ ジャンル（必要に応じて増やせる） -->
 <div class="genre"><label><input type="checkbox" value="TP"> TP（英単語）</label></div>
-<div class="genre"><label><input type="checkbox" value="BP"> BP（基礎英語）</label></div>
-<div class="genre"><label><input type="checkbox" value="MH"> MH（みんはや）</label></div>
 <div class="genre"><label><input type="checkbox" value="ZZ"> ZZ（雑学）</label></div>
+<div class="genre"><label><input type="checkbox" value="BP"> BP（基礎英語）</label></div>
+
+<hr>
+
+<h3>再生オプション</h3>
+
+<div class="genre">
+  <label><input type="checkbox" id="random"> ランダム再生</label>
+</div>
+
+<div class="genre">
+  <label><input type="checkbox" id="reverse"> 表裏逆（答え→問題）</label>
+</div>
+
+<div class="genre">
+  <label><input type="checkbox" id="speak"> 読み上げ</label>
+</div>
+
+<div class="genre">
+  <label><input type="checkbox" id="typewriter"> タイプライター表示</label>
+</div>
 
 <button onclick="startShow()">スライドショー開始</button>
 
 <script>
-  // ジャンルごとの問題数（Excelで自動生成してOK）
+  // ★ ジャンルごとの問題数（Excelで自動生成してOK）
   const files = {
     TP: 5,
-    BP: 3,
-    MH: 4,
-    ZZ: 2
+    ZZ: 3,
+    BP: 4
   };
 
   function startShow() {
+    // ★ 選択されたジャンルを取得
     const selected = [...document.querySelectorAll('input[type=checkbox]:checked')]
-                      .map(cb => cb.value);
+                      .map(cb => cb.value)
+                      .filter(v => v !== "on"); // オプションの "on" を除外
 
     if (selected.length === 0) {
       alert("ジャンルを選んでください");
       return;
     }
 
+    // ★ playlist を作成
     let playlist = [];
 
     selected.forEach(code => {
@@ -53,10 +75,18 @@
       }
     });
 
-    // playlist を保存
-    localStorage.setItem("playlist", JSON.stringify(playlist));
+    // ★ ランダム再生
+    const random = document.getElementById("random").checked;
+    if (random) playlist.sort(() => Math.random() - 0.5);
 
-    // 最初の問題へ
+    // ★ 設定を localStorage に保存
+    localStorage.setItem("playlist", JSON.stringify(playlist));
+    localStorage.setItem("random", random ? "1" : "0");
+    localStorage.setItem("reverse", document.getElementById("reverse").checked ? "1" : "0");
+    localStorage.setItem("speak", document.getElementById("speak").checked ? "1" : "0");
+    localStorage.setItem("typewriter", document.getElementById("typewriter").checked ? "1" : "0");
+
+    // ★ 最初の問題へ移動
     window.location.href = playlist[0];
   }
 </script>
