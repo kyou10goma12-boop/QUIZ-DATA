@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英単語クイズ</title>
+  <style>
+    body { font-size: 2rem; text-align: center; padding: 40px; }
+    #answer { display: none; margin-top: 40px; color: #d00; }
+    button { font-size: 1.5rem; padding: 10px 20px; margin-top: 30px; }
+  </style>
+</head>
+<body>
+
+  <div id="question">APPLE</div>
+
+  <button onclick="showAnswer()">答えを見る</button>
+
+  <div id="answer">りんご</div>
+
+  <script>
+    function showAnswer() {
+      document.getElementById('answer').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
