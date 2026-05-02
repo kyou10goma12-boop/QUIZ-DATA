@@ -52,10 +52,15 @@ document.getElementById("qTimeBox").value = qTime / 1000;
 document.getElementById("aTimeBox").value = aTime / 1000;
 
 /* ================================
-   現在のスライド位置
+   playlist が無い場合（単独モード）
 ================================ */
-const current = window.location.pathname.split("/").pop();
-const index = playlist.findIndex(p => p.endsWith(current));
+let index = -1;
+if (!playlist) {
+  console.warn("playlist がありません。index.html から起動していません。");
+} else {
+  const current = window.location.pathname.split("/").pop();
+  index = playlist.findIndex(p => p.endsWith(current));
+}
 
 /* ================================
    読み上げ
@@ -91,7 +96,6 @@ const question = document.getElementById("question");
 const answer   = document.getElementById("answer");
 
 if (reverse) {
-  // 答え → 問題
   answer.style.display = 'block';
   question.style.display = 'none';
 
@@ -105,7 +109,6 @@ if (reverse) {
   }, qTime);
 
 } else {
-  // 問題 → 答え
   answer.style.display = 'none';
 
   typeWriter(question, question.textContent);
@@ -118,16 +121,18 @@ if (reverse) {
 }
 
 /* ================================
-   自動で次へ（停止可能）
+   自動で次へ（playlist がある時だけ）
 ================================ */
 let paused = false;
 
-setTimeout(() => {
-  if (!paused) {
-    const next = playlist[index + 1];
-    if (next) window.location.href = next;
-  }
-}, qTime + aTime);
+if (playlist && index >= 0) {
+  setTimeout(() => {
+    if (!paused) {
+      const next = playlist[index + 1];
+      if (next) window.location.href = next;
+    }
+  }, qTime + aTime);
+}
 
 /* ================================
    ボタン操作
@@ -137,13 +142,21 @@ document.getElementById("showAnswerBtn").onclick = () => {
 };
 
 document.getElementById("nextBtn").onclick = () => {
-  const next = playlist[index + 1];
-  if (next) window.location.href = next;
+  if (playlist && index >= 0) {
+    const next = playlist[index + 1];
+    if (next) window.location.href = next;
+  } else {
+    alert("index.html から起動してください");
+  }
 };
 
 document.getElementById("prevBtn").onclick = () => {
-  const prev = playlist[index - 1];
-  if (prev) window.location.href = prev;
+  if (playlist && index >= 0) {
+    const prev = playlist[index - 1];
+    if (prev) window.location.href = prev;
+  } else {
+    alert("index.html から起動してください");
+  }
 };
 
 document.getElementById("pauseBtn").onclick = () => {
