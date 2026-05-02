@@ -89,7 +89,7 @@
     selected.forEach(code => {
       for (let i = 1; i <= files[code]; i++) {
         const num = String(i).padStart(5, "0");
-        playlist.push(`slides/${code}/${num}.html`);
+        playlist.push(`${code}/${num}.html`);
       }
     });
 
